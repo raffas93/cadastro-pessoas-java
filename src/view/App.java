@@ -1,6 +1,8 @@
 package view;
 
+import controller.BancoInicializador;
 import controller.Cadastro;
+import controller.PessoaDAO;
 import model.Pessoa;
 
 import java.util.Scanner;
@@ -9,6 +11,9 @@ public class App {
     public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
         Cadastro cadastro = new Cadastro();
+        PessoaDAO pessoaDAO = new PessoaDAO();
+
+        BancoInicializador.criarTabela();
 
         //Menu interativo
         while (true) {
@@ -27,10 +32,10 @@ public class App {
             entrada.nextLine();
             switch (opcao) {
                 case 1:
-                    cadastrarPessoa(entrada, cadastro);
+                    cadastrarPessoa(entrada, pessoaDAO);
                     break;
                 case 2:
-                    listarPessoa(cadastro);
+                    listarPessoa(pessoaDAO);
                     break;
                 case 3:
                     buscarPessoa(entrada, cadastro);
@@ -57,7 +62,7 @@ public class App {
 
     }
 
-    private static void cadastrarPessoa(Scanner entrada, Cadastro cadastro) {
+    private static void cadastrarPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
         System.out.println("--- Cadastrar novo pessoa ---");
         System.out.print("Nome: ");
         String nome = entrada.nextLine();
@@ -68,13 +73,13 @@ public class App {
         String email = entrada.nextLine();
 
         Pessoa p = new Pessoa(nome, idade, email);
-        boolean sucesso = cadastro.adicionarPessoa(p);
+        boolean sucesso = pessoaDAO.salvar(p);
         System.out.println(sucesso ? "Pessoa cadastrada com sucesso" : "Erro ao cadastrar pessoa");
     }
 
-    private static void listarPessoa(Cadastro cadastro) {
+    private static void listarPessoa(PessoaDAO pessoaDAO) {
         System.out.println("--- Listar todas as pessoas ---");
-        for (Pessoa p2 : cadastro.listarPessoas()) {
+        for (Pessoa p2 : pessoaDAO.listarTodos()) {
             System.out.println(p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ".");
         }
     }

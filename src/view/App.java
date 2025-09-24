@@ -1,0 +1,133 @@
+package view;
+
+import controller.Cadastro;
+import model.Pessoa;
+
+import java.util.Scanner;
+
+public class App {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        Cadastro cadastro = new Cadastro();
+
+        //Menu interativo
+        while (true) {
+            System.out.println("\n--- MENU ---");
+            System.out.println("[1] Cadastrar nova pessoa");
+            System.out.println("[2] Listar todas");
+            System.out.println("[3] Buscar pessoa por nome");
+            System.out.println("[4] Editar pessoa");
+            System.out.println("[5] Remover pessoa");
+            System.out.println("[6] Exportar");
+            System.out.println("[7] Importar");
+            System.out.println("[0] Sair");
+            System.out.print("Escolha uma opção: ");
+
+            int opcao = entrada.nextInt();
+            entrada.nextLine();
+            switch (opcao) {
+                case 1:
+                    cadastrarPessoa(entrada, cadastro);
+                    break;
+                case 2:
+                    listarPessoa(cadastro);
+                    break;
+                case 3:
+                    buscarPessoa(entrada, cadastro);
+                    break;
+                case 4:
+                    editarPessoa(entrada, cadastro);
+                    break;
+                case 5:
+                    removerPessoa(entrada, cadastro);
+                    break;
+                case 6:
+                    exportarPessoa(entrada, cadastro);
+                    break;
+                case 7:
+                    importarPessoa(entrada, cadastro);
+                    break;
+                case 0:
+                    System.out.println("Encerrando o programa...");
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+
+    }
+
+    private static void cadastrarPessoa(Scanner entrada, Cadastro cadastro) {
+        System.out.println("--- Cadastrar novo pessoa ---");
+        System.out.print("Nome: ");
+        String nome = entrada.nextLine();
+        System.out.print("Idade: ");
+        int idade = entrada.nextInt();
+        entrada.nextLine();
+        System.out.print("Email: ");
+        String email = entrada.nextLine();
+
+        Pessoa p = new Pessoa(nome, idade, email);
+        boolean sucesso = cadastro.adicionarPessoa(p);
+        System.out.println(sucesso ? "Pessoa cadastrada com sucesso" : "Erro ao cadastrar pessoa");
+    }
+
+    private static void listarPessoa(Cadastro cadastro) {
+        System.out.println("--- Listar todas as pessoas ---");
+        for (Pessoa p2 : cadastro.listarPessoas()) {
+            System.out.println(p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ".");
+        }
+    }
+
+    private static void buscarPessoa(Scanner entrada,Cadastro cadastro) {
+        System.out.println("--- Buscar pessoa por nome ---");
+        System.out.print("Nome da pessoa: ");
+        String nomeBusca = entrada.nextLine();
+        Pessoa encontrada = cadastro.buscarPessoa(nomeBusca);
+        if (encontrada != null) {
+            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail());
+        } else {
+            System.out.println("Pessoa não encontrada.");
+        }
+    }
+
+    private static void editarPessoa(Scanner entrada, Cadastro cadastro) {
+        System.out.println("--- Editar pessoa por nome ---");
+        System.out.print("Nome da pessoa: ");
+        String nomeEdita = entrada.nextLine();
+        System.out.print("Idade: ");
+        int idadeEdita = entrada.nextInt();
+        entrada.nextLine();
+        System.out.print("Email: ");
+        String emailEdita = entrada.nextLine();
+
+        Pessoa novosDados = new Pessoa(nomeEdita, idadeEdita, emailEdita);
+        boolean editado = cadastro.editarPessoa(nomeEdita, novosDados);
+        System.out.println(editado ? "Dados atualizados!" : "Erro ao editar pessoa");
+    }
+
+    private static void removerPessoa(Scanner entrada, Cadastro cadastro) {
+        System.out.println("--- Remover pessoa por nome ---");
+        System.out.print("Nome da pessoa: ");
+        String nomeRemover = entrada.nextLine();
+        boolean removido = cadastro.removerPessoa(nomeRemover);
+        System.out.println(removido ? "Pessoa removida!" : "Erro ao remover pessoa");
+    }
+
+    private static void exportarPessoa(Scanner entrada, Cadastro cadastro) {
+        System.out.println("--- Exportar todas as pessoas ---");
+        System.out.print("Nome do arquivo: ");
+        String nomeArquivo = entrada.nextLine();
+        boolean exportado = cadastro.exportarPessoas(nomeArquivo);
+        System.out.println(exportado ? "Exportado com sucesso!" : "Erro ao exportar pessoas");
+    }
+
+    private static void importarPessoa(Scanner entrada, Cadastro cadastro) {
+        System.out.println("--- Importar todas as pessoas ---");
+        System.out.print("Nome do arquivo: ");
+        String nomeArquivoImportar = entrada.nextLine();
+        boolean importado = cadastro.importarPessoas(nomeArquivoImportar);
+        System.out.println(importado ? "Arquivo importado com sucesso!" : "Erro ao importar pessoas");
+    }
+
+}

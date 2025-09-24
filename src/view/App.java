@@ -129,5 +129,5 @@ public class App {
         boolean importado = cadastro.importarPessoas(nomeArquivoImportar);
         System.out.println(importado ? "Arquivo importado com sucesso!" : "Erro ao importar pessoas");
     }
-
+    //teste
 }

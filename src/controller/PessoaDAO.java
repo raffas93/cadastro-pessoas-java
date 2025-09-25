@@ -49,4 +49,49 @@ public class PessoaDAO {
         }
         return lista;
     }
+
+    public Pessoa buscarPorNome(String nomeBuscado) {
+        String sql = "SELECT nome, idade, email FROM pessoas WHERE nome LIKE ? ";
+
+        try (Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1,nomeBuscado + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String nome = rs.getString("nome");
+                int idade = rs.getInt("idade");
+                String email = rs.getString("email");
+                return new Pessoa(nome, idade, email);
+            }
+    } catch (Exception e) {
+            System.out.println("Erro ao buscarPorNome: " + e.getMessage());
+        }
+
+    return null;
+
+    }
+
+    public boolean editar(String nomeOriginal, Pessoa novosDados) {
+        String sql = "UPDATE pessoas SET nome = ?, idade = ?, email = ? WHERE nome LIKE ?";
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, novosDados.getNome());
+            stmt.setInt(2, novosDados.getIdade());
+            stmt.setString(3, novosDados.getEmail());
+            stmt.setString(4, nomeOriginal + "%");
+
+        int linhasAfetadas = stmt.executeUpdate();
+        return linhasAfetadas > 0;
+        } catch (SQLException e) {
+            System.out.println("Erro ao editar pessoa: " + e.getMessage());
+            return false;
+        }
+
+
+    }
+
+
+
 }

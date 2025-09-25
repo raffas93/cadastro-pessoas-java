@@ -4,7 +4,6 @@ import controller.BancoInicializador;
 import controller.Cadastro;
 import controller.PessoaDAO;
 import model.Pessoa;
-
 import java.util.Scanner;
 
 public class App {
@@ -38,10 +37,12 @@ public class App {
                     listarPessoa(pessoaDAO);
                     break;
                 case 3:
-                    buscarPessoa(entrada, cadastro);
+                    buscarPessoa(entrada, pessoaDAO);
                     break;
                 case 4:
-                    editarPessoa(entrada, cadastro);
+
+
+                    editarPessoa(entrada, pessoaDAO);
                     break;
                 case 5:
                     removerPessoa(entrada, cadastro);
@@ -84,11 +85,11 @@ public class App {
         }
     }
 
-    private static void buscarPessoa(Scanner entrada,Cadastro cadastro) {
+    private static void buscarPessoa(Scanner entrada,PessoaDAO pessoaDAO) {
         System.out.println("--- Buscar pessoa por nome ---");
         System.out.print("Nome da pessoa: ");
         String nomeBusca = entrada.nextLine();
-        Pessoa encontrada = cadastro.buscarPessoa(nomeBusca);
+        Pessoa encontrada = pessoaDAO.buscarPorNome(nomeBusca);
         if (encontrada != null) {
             System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail());
         } else {
@@ -96,19 +97,28 @@ public class App {
         }
     }
 
-    private static void editarPessoa(Scanner entrada, Cadastro cadastro) {
-        System.out.println("--- Editar pessoa por nome ---");
+    private static void editarPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
+        System.out.println("--- Buscar nome de pessoa para editar ---");
         System.out.print("Nome da pessoa: ");
-        String nomeEdita = entrada.nextLine();
-        System.out.print("Idade: ");
-        int idadeEdita = entrada.nextInt();
-        entrada.nextLine();
-        System.out.print("Email: ");
-        String emailEdita = entrada.nextLine();
+        String nomeBusca = entrada.nextLine();
+        Pessoa encontrada = pessoaDAO.buscarPorNome(nomeBusca);
+        if (encontrada != null) {
+            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail());
+            System.out.println("--- Insira os novos dados ---");
+            System.out.print("Nome da pessoa: ");
+            String nomeEdita = entrada.nextLine();
+            System.out.print("Idade: ");
+            int idadeEdita = entrada.nextInt();
+            entrada.nextLine();
+            System.out.print("Email: ");
+            String emailEdita = entrada.nextLine();
 
-        Pessoa novosDados = new Pessoa(nomeEdita, idadeEdita, emailEdita);
-        boolean editado = cadastro.editarPessoa(nomeEdita, novosDados);
-        System.out.println(editado ? "Dados atualizados!" : "Erro ao editar pessoa");
+            Pessoa novosDados = new Pessoa(nomeEdita, idadeEdita, emailEdita);
+            boolean editado = pessoaDAO.editar(nomeBusca, novosDados);
+            System.out.println(editado ? "Dados atualizados!" : "Erro ao editar pessoa");
+        } else {
+            System.out.println("Pessoa não encontrada.");
+        }
     }
 
     private static void removerPessoa(Scanner entrada, Cadastro cadastro) {

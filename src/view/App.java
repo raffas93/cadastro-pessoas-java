@@ -19,7 +19,7 @@ public class App {
             System.out.println("\n--- MENU ---");
             System.out.println("[1] Cadastrar nova pessoa");
             System.out.println("[2] Listar todas");
-            System.out.println("[3] Buscar pessoa por nome");
+            System.out.println("[3] Buscar pessoa por CPF");
             System.out.println("[4] Editar pessoa");
             System.out.println("[5] Remover pessoa");
             System.out.println("[6] Exportar");
@@ -40,18 +40,16 @@ public class App {
                     buscarPessoa(entrada, pessoaDAO);
                     break;
                 case 4:
-
-
                     editarPessoa(entrada, pessoaDAO);
                     break;
                 case 5:
-                    removerPessoa(entrada, cadastro);
+                    removerPessoa(entrada, pessoaDAO);
                     break;
                 case 6:
-                    exportarPessoa(entrada, cadastro);
+                    exportarPessoa(entrada, pessoaDAO);
                     break;
                 case 7:
-                    importarPessoa(entrada, cadastro);
+                    importarPessoa(entrada, pessoaDAO);
                     break;
                 case 0:
                     System.out.println("Encerrando o programa...");
@@ -83,13 +81,13 @@ public class App {
     private static void listarPessoa(PessoaDAO pessoaDAO) {
         System.out.println("--- Listar todas as pessoas ---");
         for (Pessoa p2 : pessoaDAO.listarTodos()) {
-            System.out.println(p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ", CPF: " + p2.getCpf());
+            System.out.println(p2.getId() + ", " + p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ", CPF: " + p2.getCpf());
         }
     }
 
     private static void buscarPessoa(Scanner entrada,PessoaDAO pessoaDAO) {
-        System.out.println("--- Buscar pessoa por nome ---");
-        System.out.print("Nome da pessoa: ");
+        System.out.println("--- Buscar pessoa por CPF ---");
+        System.out.print("CPF da pessoa: ");
         String cpfBusca = entrada.nextLine();
         Pessoa encontrada = pessoaDAO.buscarPorCpf(cpfBusca);
         if (encontrada != null) {
@@ -105,9 +103,10 @@ public class App {
         String cpfBusca = entrada.nextLine();
         Pessoa encontrada = pessoaDAO.buscarPorCpf(cpfBusca);
         if (encontrada != null) {
-            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail() + ", " + encontrada.getCpf());
+            System.out.println("Encontrada: " + encontrada.getId() + ", " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail() + ", " + encontrada.getCpf());
             System.out.println("--- Insira os novos dados ---");
             System.out.print("Nome da pessoa: ");
+            int idEdita = encontrada.getId();
             String nomeEdita = entrada.nextLine();
             System.out.print("Idade: ");
             int idadeEdita = entrada.nextInt();
@@ -123,27 +122,27 @@ public class App {
         }
     }
 
-    private static void removerPessoa(Scanner entrada, Cadastro cadastro) {
-        System.out.println("--- Remover pessoa por nome ---");
-        System.out.print("Nome da pessoa: ");
-        String nomeRemover = entrada.nextLine();
-        boolean removido = cadastro.removerPessoa(nomeRemover);
+    private static void removerPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
+        System.out.println("--- Remover pessoa por CPF ---");
+        System.out.print("CPF da pessoa: ");
+        String cpfRemover = entrada.nextLine();
+        boolean removido = pessoaDAO.removerPorCpf(cpfRemover);
         System.out.println(removido ? "Pessoa removida!" : "Erro ao remover pessoa");
     }
 
-    private static void exportarPessoa(Scanner entrada, Cadastro cadastro) {
+    private static void exportarPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
         System.out.println("--- Exportar todas as pessoas ---");
         System.out.print("Nome do arquivo: ");
         String nomeArquivo = entrada.nextLine();
-        boolean exportado = cadastro.exportarPessoas(nomeArquivo);
+        boolean exportado = pessoaDAO.exportarPessoas(nomeArquivo);
         System.out.println(exportado ? "Exportado com sucesso!" : "Erro ao exportar pessoas");
     }
 
-    private static void importarPessoa(Scanner entrada, Cadastro cadastro) {
+    private static void importarPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
         System.out.println("--- Importar todas as pessoas ---");
         System.out.print("Nome do arquivo: ");
         String nomeArquivoImportar = entrada.nextLine();
-        boolean importado = cadastro.importarPessoas(nomeArquivoImportar);
+        boolean importado = pessoaDAO.importarPessoas(nomeArquivoImportar);
         System.out.println(importado ? "Arquivo importado com sucesso!" : "Erro ao importar pessoas");
     }
     //teste

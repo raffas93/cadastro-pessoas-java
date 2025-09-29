@@ -12,6 +12,17 @@ import java.util.List;
 
 public class PessoaDAO {
     public boolean salvar(Pessoa p) {
+
+        if (!validaCpf(p.getCpf())) {
+            System.out.println("CPF invalido: " + p.getCpf());
+            return false;
+        }
+
+        if (buscarPorCpf(p.getCpf()) != null) {
+            System.out.println("CPF ja cadastrado: " + p.getCpf());
+            return false;
+        }
+
         String sql = "INSERT INTO pessoas (nome, idade, email, cpf) VALUES (?,?,?,?)";
 
         try (Connection conn = Conexao.conectar();
@@ -96,7 +107,6 @@ public class PessoaDAO {
         }
     }
 
-
     public boolean removerPorCpf(String cpfRemover) {
         String sql = "DELETE FROM pessoas WHERE cpf = ?";
         try (Connection conn = Conexao.conectar();
@@ -146,5 +156,9 @@ public class PessoaDAO {
             System.out.println("Erro ao importar arquivo: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean validaCpf(String cpf) {
+        return cpf != null && cpf.matches("\\d{11}");
     }
 }

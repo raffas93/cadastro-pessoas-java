@@ -12,7 +12,8 @@ public class BancoInicializador {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome VARCHAR(100) not NULL,
                 idade INTEGER not NULL,
-                email VARCHAR(100) not NULL
+                email VARCHAR(100) not NULL,
+                cpf VARCHAR(100) not NULL UNIQUE
                 );
                 """;
 

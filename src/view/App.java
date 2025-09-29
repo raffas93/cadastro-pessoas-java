@@ -72,8 +72,10 @@ public class App {
         entrada.nextLine();
         System.out.print("Email: ");
         String email = entrada.nextLine();
+        System.out.print("CPF: ");
+        String cpf = entrada.nextLine();
 
-        Pessoa p = new Pessoa(nome, idade, email);
+        Pessoa p = new Pessoa(nome, idade, email,cpf);
         boolean sucesso = pessoaDAO.salvar(p);
         System.out.println(sucesso ? "Pessoa cadastrada com sucesso" : "Erro ao cadastrar pessoa");
     }
@@ -81,17 +83,17 @@ public class App {
     private static void listarPessoa(PessoaDAO pessoaDAO) {
         System.out.println("--- Listar todas as pessoas ---");
         for (Pessoa p2 : pessoaDAO.listarTodos()) {
-            System.out.println(p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ".");
+            System.out.println(p2.getNome() + ", tem " + p2.getIdade() + " anos, E-mail: " + p2.getEmail() + ", CPF: " + p2.getCpf());
         }
     }
 
     private static void buscarPessoa(Scanner entrada,PessoaDAO pessoaDAO) {
         System.out.println("--- Buscar pessoa por nome ---");
         System.out.print("Nome da pessoa: ");
-        String nomeBusca = entrada.nextLine();
-        Pessoa encontrada = pessoaDAO.buscarPorNome(nomeBusca);
+        String cpfBusca = entrada.nextLine();
+        Pessoa encontrada = pessoaDAO.buscarPorCpf(cpfBusca);
         if (encontrada != null) {
-            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail());
+            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail()  + ", " + encontrada.getCpf());
         } else {
             System.out.println("Pessoa não encontrada.");
         }
@@ -100,10 +102,10 @@ public class App {
     private static void editarPessoa(Scanner entrada, PessoaDAO pessoaDAO) {
         System.out.println("--- Buscar nome de pessoa para editar ---");
         System.out.print("Nome da pessoa: ");
-        String nomeBusca = entrada.nextLine();
-        Pessoa encontrada = pessoaDAO.buscarPorNome(nomeBusca);
+        String cpfBusca = entrada.nextLine();
+        Pessoa encontrada = pessoaDAO.buscarPorCpf(cpfBusca);
         if (encontrada != null) {
-            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail());
+            System.out.println("Encontrada: " + encontrada.getNome() + ", " + encontrada.getIdade() + ", " + encontrada.getEmail() + ", " + encontrada.getCpf());
             System.out.println("--- Insira os novos dados ---");
             System.out.print("Nome da pessoa: ");
             String nomeEdita = entrada.nextLine();
@@ -113,8 +115,8 @@ public class App {
             System.out.print("Email: ");
             String emailEdita = entrada.nextLine();
 
-            Pessoa novosDados = new Pessoa(nomeEdita, idadeEdita, emailEdita);
-            boolean editado = pessoaDAO.editar(nomeBusca, novosDados);
+            Pessoa novosDados = new Pessoa(nomeEdita, idadeEdita, emailEdita, cpfBusca);
+            boolean editado = pessoaDAO.editar(cpfBusca, novosDados);
             System.out.println(editado ? "Dados atualizados!" : "Erro ao editar pessoa");
         } else {
             System.out.println("Pessoa não encontrada.");

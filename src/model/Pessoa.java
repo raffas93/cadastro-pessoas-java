@@ -4,6 +4,7 @@ public class Pessoa {
     private String nome;
     private int idade;
     private String email;
+    private String cpf;
 
     public String getNome() {
         return nome;
@@ -37,11 +38,19 @@ public class Pessoa {
         }
     }
 
-    public Pessoa(String nome, int idade, String email) {
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public Pessoa(String nome, int idade, String email, String cpf) {
         setNome(nome);
         setIdade(idade);
         setEmail(email);
+        setCpf(cpf);
     }
-
 
 }

@@ -75,7 +75,8 @@ public class Cadastro {
                     String nome = partes[0].trim();
                     int idade = Integer.parseInt(partes[1].trim());
                     String email = partes[2].trim();
-                    Pessoa p = new Pessoa(nome, idade, email);
+                    String cpf = partes[3].trim();
+                    Pessoa p = new Pessoa(nome, idade, email, cpf);
                     pessoas.add(p);
                 }
             }

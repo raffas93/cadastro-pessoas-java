@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PessoaDAO {
     public boolean salvar(Pessoa p) {
-        String sql = "INSERT INTO pessoas (nome, idade, email) VALUES (?,?,?)";
+        String sql = "INSERT INTO pessoas (nome, idade, email, cpf) VALUES (?,?,?,?)";
 
         try (Connection conn = Conexao.conectar();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -19,6 +19,7 @@ public class PessoaDAO {
             stmt.setString(1, p.getNome());
             stmt.setInt(2, p.getIdade());
             stmt.setString(3, p.getEmail());
+            stmt.setString(4, p.getCpf());
 
             stmt.executeUpdate();
             return true;
@@ -30,7 +31,7 @@ public class PessoaDAO {
 
     public List<Pessoa> listarTodos() {
         List<Pessoa> lista = new ArrayList<Pessoa>();
-        String sql = "SELECT nome, idade, email FROM pessoas";
+        String sql = "SELECT nome, idade, email, cpf FROM pessoas";
 
         try (Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -40,8 +41,9 @@ public class PessoaDAO {
                 String nome = rs.getString("nome");
                 int idade = rs.getInt("idade");
                 String email = rs.getString("email");
+                String cpf = rs.getString("cpf");
 
-                Pessoa p = new Pessoa(nome, idade, email);
+                Pessoa p = new Pessoa(nome, idade, email,cpf);
                 lista.add(p);
             }
         }catch (SQLException e) {
@@ -50,37 +52,38 @@ public class PessoaDAO {
         return lista;
     }
 
-    public Pessoa buscarPorNome(String nomeBuscado) {
-        String sql = "SELECT nome, idade, email FROM pessoas WHERE nome LIKE ? ";
+    public Pessoa buscarPorCpf(String cpfBuscado) {
+        String sql = "SELECT nome, idade, email, cpf FROM pessoas WHERE cpf = ? ";
 
         try (Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1,nomeBuscado + "%");
+            stmt.setString(1,cpfBuscado);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 String nome = rs.getString("nome");
                 int idade = rs.getInt("idade");
                 String email = rs.getString("email");
-                return new Pessoa(nome, idade, email);
+                String cpf = rs.getString("cpf");
+                return new Pessoa(nome, idade, email, cpf);
             }
     } catch (Exception e) {
-            System.out.println("Erro ao buscarPorNome: " + e.getMessage());
+            System.out.println("Erro ao buscar por CPF: " + e.getMessage());
         }
 
     return null;
 
     }
 
-    public boolean editar(String nomeOriginal, Pessoa novosDados) {
-        String sql = "UPDATE pessoas SET nome = ?, idade = ?, email = ? WHERE nome LIKE ?";
+    public boolean editar(String cpfBuscado, Pessoa novosDados) {
+        String sql = "UPDATE pessoas SET nome = ?, idade = ?, email = ? WHERE cpf = ?";
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, novosDados.getNome());
             stmt.setInt(2, novosDados.getIdade());
             stmt.setString(3, novosDados.getEmail());
-            stmt.setString(4, nomeOriginal + "%");
+            stmt.setString(4, cpfBuscado);
 
         int linhasAfetadas = stmt.executeUpdate();
         return linhasAfetadas > 0;
@@ -91,7 +94,6 @@ public class PessoaDAO {
 
 
     }
-
 
 
 }
